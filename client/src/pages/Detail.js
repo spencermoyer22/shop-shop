@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { useStoreContext } from '../utils/GlobalState';
-import { UPDATE_PRODUCTS, REMOVE_FROM_CART, ADD_TO_CART, UPDATE_CART_QUANTITY } from '../utils/actions';
 import { QUERY_PRODUCTS } from '../utils/queries';
 import spinner from '../assets/spinner.gif';
 import Cart from '../components/Cart';
 import { idbPromise } from '../utils/helpers';
+import { useSelector, useDispatch } from 'react-redux';
 
 function Detail() {
-  const [state, dispatch] = useStoreContext();
+  const state = useSelector(state => state);
+  const dispatch = useDispatch();
   const { id } = useParams();
 
   const [currentProduct, setCurrentProduct] = useState({});
@@ -23,7 +23,7 @@ function Detail() {
 
     if (itemInCart) {
       dispatch({
-        type: UPDATE_CART_QUANTITY,
+        type: 'updateCartQuantity',
         _id: id,
         purchaseQuantity: parseInt(itemInCart.purchaseQuantity) + 1
       });
@@ -34,7 +34,7 @@ function Detail() {
       });
     } else {
       dispatch({
-        type: ADD_TO_CART,
+        type: 'addToCart',
         product: { ...currentProduct, purchaseQuantity: 1 }
       });
       // if product isn't in the cart yet, add it to the current shopping cart in IndexedDb
@@ -44,7 +44,7 @@ function Detail() {
 
   const removeFromCart = () => {
     dispatch({
-      type: REMOVE_FROM_CART,
+      type: 'removeFromCart',
       _id: currentProduct._id
     });
 
@@ -57,7 +57,7 @@ function Detail() {
       setCurrentProduct(products.find((product) => product._id === id));
     } else if (data) {
       dispatch({
-        type: UPDATE_PRODUCTS,
+        type: 'updateProducts',
         products: data.products
       });
 
@@ -67,7 +67,7 @@ function Detail() {
     } else if (!loading) {
       idbPromise('products', 'get').then((indexedProducts) => {
         dispatch({
-          type: UPDATE_PRODUCTS,
+          type: 'updateProducts',
           products: indexedProducts
         });
       });
