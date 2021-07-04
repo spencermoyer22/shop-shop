@@ -1,46 +1,41 @@
-import {
-    UPDATE_PRODUCTS,
-    UPDATE_CATEGORIES,
-    UPDATE_CURRENT_CATEGORY,
-    ADD_TO_CART,
-    ADD_MULTIPLE_TO_CART,
-    REMOVE_FROM_CART,
-    UPDATE_CART_QUANTITY,
-    CLEAR_CART,
-    TOGGLE_CART
-} from './actions';
-import { useReducer } from 'react';
+const initialState = {
+    products: [],
+    cart: [],
+    cartOpen: false,
+    categories: [],
+    currentCategory: ''
+}
 
-export const reducer = (state, action) => {
+export default function rootReducer(state = initialState, action) {
     switch (action.type) {
         // if action type is the value of `UPDATE_PRODUCTS`, return a new state object with an updated products array
-        case UPDATE_PRODUCTS:
+        case 'updateProducts':
             return {
                 ...state,
                 products: [...action.products]
             };
-        case UPDATE_CATEGORIES:
+        case 'updateCategories':
             return {
                 ...state,
                 categories: [...action.categories]
             };
-        case UPDATE_CURRENT_CATEGORY:
+        case 'updateCurrentCategory':
             return {
                 ...state,
                 currentCategory: action.currentCategory
             };
-        case ADD_TO_CART:
+        case 'addToCart':
             return {
                 ...state,
                 cartOpen: true,
                 cart: [...state.cart, action.product]
             };
-        case ADD_MULTIPLE_TO_CART:
+        case 'addMultipleToCart':
             return {
                 ...state,
                 cart: [...state.cart, ...action.products]
             };
-        case REMOVE_FROM_CART:
+        case 'removeFromCart':
             let newState = state.cart.filter(product => {
                 return product._id !== action._id;
             });
@@ -49,7 +44,7 @@ export const reducer = (state, action) => {
                 cartOpen: newState.length > 0,
                 cart: newState
             }
-        case UPDATE_CART_QUANTITY:
+        case 'updateCartQuantity':
             return {
                 ...state,
                 cartOpen: true,
@@ -60,13 +55,13 @@ export const reducer = (state, action) => {
                     return product;
                 })
             }
-        case CLEAR_CART:
+        case 'clearCart':
             return {
                 ...state,
                 cartOpen: false,
                 cart: []
             };
-        case TOGGLE_CART:
+        case 'toggleCart':
             return {
                 ...state,
                 cartOpen: !state.cartOpen
@@ -76,7 +71,3 @@ export const reducer = (state, action) => {
             return state;
     }
 };
-
-export function useProductReducer(initialState) {
-    return useReducer(reducer, initialState);
-}

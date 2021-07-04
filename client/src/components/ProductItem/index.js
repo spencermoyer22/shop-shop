@@ -1,9 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { pluralize } from "../../utils/helpers"
-import { useStoreContext } from '../../utils/GlobalState';
-import { ADD_TO_CART, UPDATE_CART_QUANTITY } from '../../utils/actions';
 import { idbPromise } from '../../utils/helpers';
+import { useSelector, useDispatch } from 'react-redux';
 
 function ProductItem(item) {
   const {
@@ -14,7 +13,8 @@ function ProductItem(item) {
     quantity
   } = item;
 
-  const [state, dispatch] = useStoreContext();
+  const state = useSelector(state => state);
+  const dispatch = useDispatch();
 
   const { cart } = state;
   
@@ -25,7 +25,7 @@ function ProductItem(item) {
     // if match, call update with a new purchase quantity
     if (itemInCart) {
       dispatch({
-        type: UPDATE_CART_QUANTITY,
+        type: 'updateCartQuantity',
         _id: _id,
         purchaseQuantity: parseInt(itemInCart.purchaseQuantity) + 1
       });
@@ -35,7 +35,7 @@ function ProductItem(item) {
       });
     } else {
       dispatch({
-        type: ADD_TO_CART,
+        type: 'addToCart',
         product: { ...item, purchaseQuantity: 1 }
       });
       idbPromise('cart', 'put', { ...item, purchaseQuantity: 1 });
