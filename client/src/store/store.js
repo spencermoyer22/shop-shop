@@ -1,5 +1,5 @@
-import { createStore } from '@reduxjs/toolkit';
-import rootReducer from './reducers';
+import { createStore } from 'redux';
+import rootReducer from './rootReducer';
 
 const preloadedState = {
     products: [],

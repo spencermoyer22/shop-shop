@@ -5,7 +5,7 @@ import { idbPromise } from '../../utils/helpers';
 import { useSelector, useDispatch } from 'react-redux';
 
 function CategoryMenu() {
-  const { categories } = useSelector(state => state.categories);
+  const categories = useSelector(state => state.categories);
   const dispatch = useDispatch();
   console.log(categories);
 
